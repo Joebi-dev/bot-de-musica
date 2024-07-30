@@ -1,0 +1,32 @@
+{
+  "name": "bot-de-musica",
+  "description": "Discord bot for youtube tutorials ",
+  "version": "1.0.0",
+  "main": "./bot/index.js",
+  "scripts": {
+    "dev": "ts-node app/index.ts",
+    "build": "tsc",
+    "start": "tsc && node ."
+  },
+  "author": "Joebi",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/voice": "^0.17.0",
+    "@distube/ytdl-core": "^4.13.5",
+    "axios": "^1.7.2",
+    "better-sqlite3": "^9.1.1",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.3.1",
+    "libsodium-wrappers": "^0.7.11",
+    "quick.db": "^9.1.7",
+    "yt-stream": "^1.6.9",
+    "ytdl-core": "^4.11.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.8",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^9.7.0",
+    "ts-node": "^10.9.1"
+  }
+}
