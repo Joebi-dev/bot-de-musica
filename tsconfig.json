@@ -4,7 +4,7 @@
       "ESNext"
     ],
     "rootDir": "app",
-    "outDir": "bot",
+    "outDir": "build",
     "target": "ESNext",
     "module": "CommonJS",
     "moduleResolution": "Node",

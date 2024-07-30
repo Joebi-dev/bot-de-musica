@@ -13,25 +13,15 @@ module.exports = {
 	async execute(client: Bot, message: Message) {
 		const s = await GuildDb.getSettings(message.guild!.id)
 		if (message.guild && s && !message.author.bot) {
-			message.delete().catch()
+		//	message.delete().catch()
 			const player = getPlayer(message.guild.id) ?? new Player(message.guild, s)
-
-			if (message.content == '1') {
-				player.next()
-			} else if (message.content == "2") {
-				player.prev()
-			} else if (message.content == "3") {
-				player.play()
-			} else {
+			
 				await searchTrack(message).then(track => {
 					player.raw.addTrack(track)
-					//if (!player.isPlayling) {
-						//player.play()
-					//}
 				}).catch((e: Error) => {
 					message.channel.send(e.message)
 				})
-			}
+
 		}
 
 		/* const channelText = await client.config.getChannelText(message.guildId)

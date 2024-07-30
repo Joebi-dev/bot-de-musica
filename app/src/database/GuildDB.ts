@@ -14,11 +14,11 @@ async function getSettings(guild_id: string): Promise<Settings | undefined> {
 
 
 async function setPosition(guild_id: string, position: number) {
-    await guild_db.set(`${guild_id}.position`, position)
+    await guild_db.set(`${guild_id}.guildSettings.position`, position)
 }
 
 async function getPosition(guild_id: string,) {
-    return await guild_db.get(`${guild_id}.position`)
+    return await guild_db.get(`${guild_id}.guildSettings.position`)
 }
 
 export const GuildDb = { setPosition, setSettings, getPosition, getSettings }

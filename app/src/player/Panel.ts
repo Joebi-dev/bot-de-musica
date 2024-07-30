@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Message, TextChannel } from "discord.js";
-import { PanelUpdate, Track } from "../@types/interfaces";
+import { PanelUpdate } from "../@types/interfaces";
 
 
 export default class Panel {
@@ -15,41 +15,28 @@ export default class Panel {
     constructor(_text_channel: TextChannel) {
         this.text_channel = _text_channel
         this.guild_id = _text_channel.guildId
-
-        this.text_channel.messages.fetch({ limit: 100 }).then(collection_message => {
-            const first_message = collection_message.filter(msg => msg.embeds[0]?.footer?.text == 'panel by Joebi').first()
-            collection_message.forEach(message => {
-                if (message.id != first_message?.id && message.deletable) {
-                    message.delete().catch()
-                }
-            })
-            first_message ? this.embed_panel = first_message : this.createPanel()
-        })
-
+        this.clear_channel()
     }
-
- 
-
 
     update(panel_update: PanelUpdate) {
         if (this.embed_panel) {
-                const { track, position, list } = panel_update
-                this.embed.setColor('Random')
-                    .setURL(track.url)
-                    .setTitle(track.title)
-                    .setAuthor(track.user)
-                    .setImage(track.thumb)
-                    .setDescription('-----------------------------------------------------------------------------')
-                    .setFields([
-                        { name: `Posição`, value: `${position + 1}`, inline: true },
-                        { name: `Total`, value: `${list?.length}`, inline: true },
-                        { name: `Duração`, value: track.duration, inline: true },
-                        { name: `Autor`, value: track.author, inline: true },
-                    ])
-                    .setFooter({ text: "panel by Joebi" })
+            const { track, position, list } = panel_update
+            this.embed.setColor('Random')
+                .setURL(track.url)
+                .setTitle(track.title)
+                .setAuthor(track.user)
+                .setImage(track.thumb)
+                .setDescription('-----------------------------------------------------------------------------')
+                .setFields([
+                    { name: `Posição`, value: `${position + 1}`, inline: true },
+                    { name: `Total`, value: `${list?.length}`, inline: true },
+                    { name: `Duração`, value: track.duration, inline: true },
+                    { name: `Autor`, value: track.author, inline: true },
+                ])
+                .setFooter({ text: "panel by Joebi" })
 
-                const playlist = this.treatPlaylist(list, position)
-                this.embed_panel.edit({content:`\`\`\`${playlist}\`\`\`` , embeds: [this.embed] })
+            const playlist = this.treatPlaylist(list, position)
+            this.embed_panel.edit({ content: `\`\`\`${playlist}\`\`\``, embeds: [this.embed] })
         }
     }
 
@@ -57,11 +44,10 @@ export default class Panel {
         if (this.embed_panel) {
             const playlist = this.treatPlaylist(list, position)
             this.embed_panel.edit({ content: `\`\`\`${playlist}\`\`\`` })
-       }
+        }
     }
 
     private createPanel() {
-
         this.embed.setColor('Random')
             .setURL("https://i.pinimg.com/564x/6d/50/9d/6d509d329b23502e4f4579cbad5f3d7f.jpg")
             .setTitle("Sem musica")
@@ -104,6 +90,16 @@ export default class Panel {
         this.text_channel.send({ content: "```Playlist```", components: [row], embeds: [this.embed] }).then(message => {
             this.embed_panel = message
         })
+    }
+
+    private clear_channel() {
+        this.text_channel.messages.fetch({ limit: 100 }).then(collection_message => {
+            const first_message = collection_message.filter(msg => msg.embeds[0]?.footer?.text == 'panel by Joebi').first()
+            collection_message.delete(first_message!.id)
+            this.text_channel.bulkDelete(collection_message).catch()
+            first_message ? this.embed_panel = first_message : this.createPanel()
+        })
+
     }
 
     private treatPlaylist(playlist: string[], position: number) {
